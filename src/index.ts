@@ -18,6 +18,7 @@
 import * as tfc from '@tensorflow/tfjs-core';
 
 import {nodeFileSystemRouter} from './io/file_system';
+import {nodeHTTPRequestRouter} from './io/node_http';
 import {NodeJSKernelBackend} from './nodejs_kernel_backend';
 
 // tslint:disable-next-line:no-require-imports
@@ -36,5 +37,13 @@ if (tfc.ENV.findBackend('tensorflow') != null) {
 // Register the model saving and loading handlers for the 'file://' URL scheme.
 tfc.io.registerSaveRouter(nodeFileSystemRouter);
 tfc.io.registerLoadRouter(nodeFileSystemRouter);
+
+// Register the model saving and loading handlers for the 'http://' URL scheme.
+// TODO(cais): Call registerSaveLoader once NodeHTTPRequest.save() is
+// implemented.
+console.log('Registering nodeHTTPRequestRouter as loader');  // DEBUG
+tfc.io.registerLoadRouter(nodeHTTPRequestRouter);
+
+console.log(tfc.io.getLoadHandlers('https://localhost/model.json'));  // DEBUG
 
 export {version} from './version';
